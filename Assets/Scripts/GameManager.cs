@@ -34,14 +34,11 @@ namespace Architecture
         {
             SceneManager.LoadScene((int)GameState.Menu);
             CurrentState = GameState.Menu;
-            AudioManager.Instance.PlayMusic("MenuMusic");
+            // AudioManager.Instance.PlayMusic("MenuMusic");
         }
 
         public void GameStart()
         {
-            // Здесь может быть код, который подготавливает игру к началу
-            // Например, установка начального счета, позиции игрока и т.д.
-            // Затем переходим в состояние Playing
             _menu.enabled = false;
             CurrentState = GameState.Playing;
             AudioManager.Instance.PlayMusic("GameMusic");
