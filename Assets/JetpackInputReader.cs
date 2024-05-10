@@ -12,4 +12,12 @@ public class JetpackInputReader : MonoBehaviour
         var direction = context.ReadValue<float>();
         _jetpackController.SetRotateDirection(direction);
     }
+
+    public void Move(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            _jetpackController.MoveIntoSpace();
+        }
+    }
 }

@@ -47,13 +47,12 @@ public class JetpackController : MonoBehaviour
         }
     }
 
-    public void MoveIntoSpace(InputAction.CallbackContext context)
+    public void MoveIntoSpace()
     {
-        if (!_isMoving && context.started)
+        if (!_isMoving)
         {
             Vector3 targetPoint = transform.position + findPointToMove();
             float distanceToCenter = Vector3.Distance(targetPoint, Vector3.zero);
-
             if (distanceToCenter <= 4f)
             {
                 StartCoroutine(MoveToPoint(targetPoint));
