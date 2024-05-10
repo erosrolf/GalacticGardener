@@ -11,17 +11,10 @@ public class JetpackController : MonoBehaviour
 
     private float _distanceToPoint = 3.48f;
     private bool _isMoving = false;
-    private Rigidbody _jetpack;
     private float _rotateDirection;
     private float _lastDirection;
 
     public void SetRotateDirection(float direction) => _rotateDirection = direction;
-
-    void Awake()
-    {
-        _jetpack = GetComponent<Rigidbody>();
-    }
-
     void Update()
     {
         if (_rotateDirection != 0)
