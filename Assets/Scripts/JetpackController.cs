@@ -13,6 +13,7 @@ public class JetpackController : MonoBehaviour
     private bool _isMoving = false;
     private Rigidbody _jetpack;
     private float _rotateDirection;
+    private float _lastDirection;
 
     public void SetRotateDirection(float direction) => _rotateDirection = direction;
 
@@ -26,7 +27,9 @@ public class JetpackController : MonoBehaviour
         if (_rotateDirection != 0)
         {
             transform.Rotate(new Vector3(0, 0, 1) * _rotateDirection * Time.deltaTime * rotationSpeed);
+            _lastDirection = _rotateDirection;
         }
+        transform.Rotate(new Vector3(0, 0, 1) * _lastDirection * Time.deltaTime * 50);
     }
 
     public void RotateLeft(InputAction.CallbackContext context)
