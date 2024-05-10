@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class JetpackController : MonoBehaviour
 {
@@ -14,7 +13,6 @@ public class JetpackController : MonoBehaviour
     private float _lastDirection;
 
     [SerializeField] GameObject _navigator;
-    [SerializeField] Image _navigatorImage;
 
     public void SetRotateDirection(float direction) => _rotateDirection = direction;
     void Update()
@@ -27,16 +25,7 @@ public class JetpackController : MonoBehaviour
         transform.Rotate(new Vector3(0, 0, 1) * _lastDirection * Time.deltaTime * 50);
         if (!_isMoving)
         {
-            var navigatorPosition = transform.position + findPointToMove();
-            if (!IsRedPoint(navigatorPosition))
-            {
-                _navigatorImage.color = Color.red;
-            }
-            else
-            {
-                _navigatorImage.color = Color.white;
-            }
-            _navigator.transform.position = navigatorPosition;
+            _navigator.transform.position = findPointToMove();
         }
     }
 
@@ -58,25 +47,11 @@ public class JetpackController : MonoBehaviour
         }
     }
 
-    private bool IsRedPoint(Vector3 targetPoint)
-    {
-        float distanceToCenter = Vector3.Distance(targetPoint, Vector3.zero);
-        return distanceToCenter <= GameSettings.Instance.DistanceToRedPoint;
-    }
-
     public void MoveIntoSpace()
     {
         if (!_isMoving)
         {
-            Vector3 targetPoint = transform.position + findPointToMove();
-            if (IsRedPoint(targetPoint))
-            {
-                StartCoroutine(MoveToPoint(targetPoint));
-            }
-            else
-            {
-                StartCoroutine(MoveToPointAndBack(targetPoint));
-            }
+            StartCoroutine(MoveToPoint(findPointToMove()));
         }
     }
 
@@ -85,7 +60,7 @@ public class JetpackController : MonoBehaviour
         var hexagon = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects);
         float angle = transform.eulerAngles.z;
         var index = Mathf.RoundToInt(angle / 360f * hexagon.Length) % hexagon.Length;
-        return hexagon[index];
+        return hexagon[index] + transform.position;
     }
 
     public IEnumerator MoveToPointAndBack(Vector3 target)

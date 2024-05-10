@@ -300,6 +300,54 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &15963996
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 15963998}
+  - component: {fileID: 15963997}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &15963997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15963996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ed14446cfdfe9a49961bd5e50e59efa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicSounds: []
+  sfxSounds: []
+  musicSource: {fileID: 0}
+  sfxSource: {fileID: 0}
+--- !u!4 &15963998
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15963996}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &86882540
 GameObject:
   m_ObjectHideFlags: 0
@@ -4159,7 +4207,6 @@ MonoBehaviour:
   timeToPoint: 0.8
   timeToRest: 0.5
   _navigator: {fileID: 690470340}
-  _navigatorImage: {fileID: 867909065}
 --- !u!114 &1432807230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4357,7 +4404,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DistanceBetweenObjects: 4.64
-  DistanceToRedPoint: 6
+  SpawnCountOnInnerZone: 2
+  SpawnCountOnMiddleZone: 4
+  SpawnCountOnOuterZone: 6
 --- !u!4 &1654292405
 Transform:
   m_ObjectHideFlags: 0
@@ -5083,8 +5132,8 @@ Transform:
   m_GameObject: {fileID: 1884891831}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -12}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 5, y: 1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -5665,6 +5714,7 @@ MonoBehaviour:
   - {fileID: 5086509610984096057, guid: 6bb138e2b2265a245ac265646b165f97, type: 3}
   - {fileID: 5086509610984096057, guid: 6bb138e2b2265a245ac265646b165f97, type: 3}
   _z_distanceToPlayer: 20
+  pointPrefab: {fileID: 7793078429768925396, guid: 9a4145bcfc0d63f4e8745c5ffe7daa2b, type: 3}
 --- !u!1 &2105050232
 GameObject:
   m_ObjectHideFlags: 0
@@ -5860,3 +5910,4 @@ SceneRoots:
   - {fileID: 558714569}
   - {fileID: 690470343}
   - {fileID: 1654292405}
+  - {fileID: 15963998}

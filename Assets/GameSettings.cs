@@ -6,7 +6,9 @@ public class GameSettings : MonoBehaviour
 {
     public static GameSettings Instance;
     public float DistanceBetweenObjects;
-    public float DistanceToRedPoint;
+    public int SpawnCountOnInnerZone;
+    public int SpawnCountOnMiddleZone;
+    public int SpawnCountOnOuterZone;
 
     void Awake()
     {

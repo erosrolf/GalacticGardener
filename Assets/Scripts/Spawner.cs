@@ -1,30 +1,116 @@
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
     public GameObject[] prefabs;
     public float _z_distanceToPlayer;
-    private Vector3[] _spawnPoints;
+    public GameObject pointPrefab;
 
-    private Vector3[] InitSpawnPoints()
+    private Vector3[] _innerSpawnZone;
+    private Vector3[] _middleSpawnZone;
+    private Vector3[] _outerSpawnZone;
+
+    private void Awake()
     {
-        var smallHex = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects);
-        var bigHex = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects * 2);
-        return smallHex.Concat(bigHex).ToArray();
+        _innerSpawnZone = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects);
+        _innerSpawnZone.Append(Vector3.zero);
+        var tmp = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects * 2);
+        _middleSpawnZone = InsertMiddlePoints(tmp);
+        tmp = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects * 4);
+        _outerSpawnZone = InsertMiddlePoints(tmp);
     }
 
     void Start()
     {
-        _spawnPoints = InitSpawnPoints();
-        InvokeRepeating("Spawn", 3f, 3f);
+        InvokeRepeating("SpawnOnInnerZone", 2f, 4f);
+        InvokeRepeating("SpawnOnMiddleZone", 4f, 4f);
+        InvokeRepeating("SpawnOnOuterZone", 2f, 2f);
+
+        VisualizePoints(_innerSpawnZone);
+        VisualizePoints(_middleSpawnZone);
+        VisualizePoints(_outerSpawnZone);
     }
 
-    public void Spawn()
+    public void VisualizePoints(Vector3[] points)
     {
-        GameObject prefab = prefabs[Random.Range(0, prefabs.Length)];
-        Vector3 spawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
-        GameObject newObj = Instantiate(prefab, new Vector3(spawnPoint.x, spawnPoint.y, _z_distanceToPlayer), Quaternion.identity);
-        newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * 5, ForceMode.Impulse);
+        foreach (Vector3 point in points)
+        {
+            Instantiate(pointPrefab, new Vector3(point.x, point.y, _z_distanceToPlayer), Quaternion.identity);
+        }
+    }
+
+    public void SpawnOnInnerZone()
+    {
+        int count = GameSettings.Instance.SpawnCountOnInnerZone;
+        var indexes = GetUniqueRandomNumbers(_innerSpawnZone.Length, count);
+        for (int i = 0; i < count; i++)
+        {
+            GameObject prefab = prefabs[Random.Range(0, prefabs.Length)];
+            Vector3 spawnPosition = _innerSpawnZone[indexes[i]];
+            spawnPosition.z = _z_distanceToPlayer;
+            GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
+            newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * 5, ForceMode.Impulse);
+        }
+    }
+
+    public void SpawnOnMiddleZone()
+    {
+        int count = GameSettings.Instance.SpawnCountOnMiddleZone;
+        var indexes = GetUniqueRandomNumbers(_middleSpawnZone.Length, count);
+        for (int i = 0; i < count; i++)
+        {
+            GameObject prefab = prefabs[Random.Range(0, prefabs.Length)];
+            Vector3 spawnPosition = _middleSpawnZone[indexes[i]];
+            spawnPosition.z = _z_distanceToPlayer;
+            GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
+            newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * 5, ForceMode.Impulse);
+        }
+    }
+
+    public void SpawnOnOuterZone()
+    {
+        int count = GameSettings.Instance.SpawnCountOnOuterZone;
+        var indexes = GetUniqueRandomNumbers(_outerSpawnZone.Length, count);
+        for (int i = 0; i < count; i++)
+        {
+            GameObject prefab = prefabs[1];
+            Vector3 spawnPosition = _outerSpawnZone[indexes[i]];
+            spawnPosition.z = _z_distanceToPlayer;
+            GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
+            newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * 5, ForceMode.Impulse);
+        }
+    }
+
+    private Vector3 GetMiddlePoint(Vector3 pointA, Vector3 pointB)
+    {
+        return Vector3.Lerp(pointA, pointB, 0.5f);
+    }
+
+    private Vector3[] InsertMiddlePoints(Vector3[] points)
+    {
+        List<Vector3> newPoints = new List<Vector3>();
+
+        for (int i = 0; i < points.Length - 1; i++)
+        {
+            newPoints.Add(points[i]);
+            newPoints.Add(GetMiddlePoint(points[i], points[i + 1]));
+        }
+        newPoints.Add(GetMiddlePoint(points[0], points[points.Length - 1]));
+        newPoints.Add(points[points.Length - 1]);
+
+        return newPoints.ToArray();
+    }
+
+    private int[] GetUniqueRandomNumbers(int max, int count)
+    {
+        HashSet<int> numbers = new HashSet<int>();
+        while (numbers.Count < count)
+        {
+            numbers.Add(Random.Range(0, max));
+        }
+        return new List<int>(numbers).ToArray();
     }
 }
