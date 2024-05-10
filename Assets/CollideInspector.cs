@@ -7,14 +7,8 @@ public class CollideInspector : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera _onPlayerVcam;
     [SerializeField] private GameObject _destroyer;
-    private JetpackController _controller;
-    private Rigidbody _rigidbody;
-
-    private void Awake()
-    {
-        _controller = GetComponent<JetpackController>();
-        _rigidbody = GetComponent<Rigidbody>();
-    }
+    [SerializeField] private JetpackController _jetpackController;
+    [SerializeField] private Rigidbody _jetpackRigidbody;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -27,10 +21,10 @@ public class CollideInspector : MonoBehaviour
     private void CollisionWithEnemy()
     {
         Debug.Log("Collision detected with enemy");
-        _controller.enabled = false;
+        _jetpackController.enabled = false;
 
-        _rigidbody.constraints = RigidbodyConstraints.None;
-        _rigidbody.isKinematic = false;
+        _jetpackRigidbody.constraints = RigidbodyConstraints.None;
+        _jetpackRigidbody.isKinematic = false;
         // _rigidbody.AddForce(Vector3.back * 5, ForceMode.Impulse);
         _destroyer.SetActive(false);
         _onPlayerVcam.Priority = 0;

@@ -1,7 +1,7 @@
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class JetpackController : MonoBehaviour
 {
@@ -9,10 +9,12 @@ public class JetpackController : MonoBehaviour
     public float timeToPoint;
     public float timeToRest;
 
-    private float _distanceToPoint = 3.48f;
     private bool _isMoving = false;
     private float _rotateDirection;
     private float _lastDirection;
+
+    [SerializeField] GameObject _navigator;
+    [SerializeField] Image _navigatorImage;
 
     public void SetRotateDirection(float direction) => _rotateDirection = direction;
     void Update()
@@ -23,6 +25,16 @@ public class JetpackController : MonoBehaviour
             _lastDirection = _rotateDirection;
         }
         transform.Rotate(new Vector3(0, 0, 1) * _lastDirection * Time.deltaTime * 50);
+        var navigatorPosition = transform.position + findPointToMove();
+        if (!IsRedPoint(navigatorPosition))
+        {
+            _navigatorImage.color = Color.red;
+        }
+        else
+        {
+            _navigatorImage.color = Color.white;
+        }
+        _navigator.transform.position = navigatorPosition;
     }
 
     public void RotateLeft(InputAction.CallbackContext context)
@@ -43,13 +55,18 @@ public class JetpackController : MonoBehaviour
         }
     }
 
+    private bool IsRedPoint(Vector3 targetPoint)
+    {
+        float distanceToCenter = Vector3.Distance(targetPoint, Vector3.zero);
+        return distanceToCenter <= GameSettings.Instance.DistanceToRedPoint;
+    }
+
     public void MoveIntoSpace()
     {
         if (!_isMoving)
         {
             Vector3 targetPoint = transform.position + findPointToMove();
-            float distanceToCenter = Vector3.Distance(targetPoint, Vector3.zero);
-            if (distanceToCenter <= 4f)
+            if (IsRedPoint(targetPoint))
             {
                 StartCoroutine(MoveToPoint(targetPoint));
             }
@@ -62,7 +79,7 @@ public class JetpackController : MonoBehaviour
 
     public Vector3 findPointToMove()
     {
-        var hexagon = HexagonPoints.CalculatePoints(_distanceToPoint);
+        var hexagon = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects);
         float angle = transform.eulerAngles.z;
         var index = Mathf.RoundToInt(angle / 360f * hexagon.Length) % hexagon.Length;
         return hexagon[index];

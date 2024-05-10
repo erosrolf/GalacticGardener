@@ -5,13 +5,12 @@ public class Spawner : MonoBehaviour
 {
     public GameObject[] prefabs;
     public float _z_distanceToPlayer;
-    private float distanceBetweenSpawnObjects = 3.48f;
     private Vector3[] _spawnPoints;
 
     private Vector3[] InitSpawnPoints()
     {
-        var smallHex = HexagonPoints.CalculatePoints(distanceBetweenSpawnObjects);
-        var bigHex = HexagonPoints.CalculatePoints(distanceBetweenSpawnObjects * 2);
+        var smallHex = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects);
+        var bigHex = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects * 2);
         return smallHex.Concat(bigHex).ToArray();
     }
 

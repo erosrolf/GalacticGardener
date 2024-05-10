@@ -107,6 +107,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "8b797bd8-3ab1-493a-ac5d-64c44d49eb61",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveIntoSpace",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "1D Axis",
                     "id": "8a3668e1-04ce-478d-b35d-605641339f5e",
                     "path": "1DAxis",
