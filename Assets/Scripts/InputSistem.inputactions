@@ -76,7 +76,7 @@
             "id": "40703eb9-dc90-45a3-a3f3-30ef303e2c05",
             "actions": [
                 {
-                    "name": "MoveUp",
+                    "name": "MoveIntoSpace",
                     "type": "Button",
                     "id": "3af3112b-2deb-4801-9d8b-bbf7d57301c4",
                     "expectedControlType": "Button",
@@ -85,22 +85,13 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "RotateToLeft",
-                    "type": "Button",
-                    "id": "f88e2349-2f8b-49d5-b6a8-ace95431cc34",
+                    "name": "Rotation",
+                    "type": "Value",
+                    "id": "50a49473-d241-40a9-88d1-69185f6dbee7",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "RotateToRight",
-                    "type": "Button",
-                    "id": "906627f8-74c1-45b5-8592-b7534c189565",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -111,53 +102,42 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MoveUp",
+                    "action": "MoveIntoSpace",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "e086b0b3-b1f4-460b-9efa-a5e880dafbec",
-                    "path": "<Keyboard>/d",
+                    "name": "1D Axis",
+                    "id": "8a3668e1-04ce-478d-b35d-605641339f5e",
+                    "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RotateToLeft",
-                    "isComposite": false,
+                    "action": "Rotation",
+                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "f224caf3-632e-4713-905e-e1de7cb2e342",
-                    "path": "<Keyboard>/rightArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "RotateToLeft",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cbf14d84-8a64-4db8-8f3c-743c2c50548e",
+                    "name": "negative",
+                    "id": "5d0c7939-70d5-40ca-98d8-01eb92a67e5f",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RotateToRight",
+                    "action": "Rotation",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 },
                 {
-                    "name": "",
-                    "id": "763b97c6-b236-4923-8cb6-32579e0b713c",
-                    "path": "<Keyboard>/leftArrow",
+                    "name": "positive",
+                    "id": "c1e8a7bc-b3bd-473d-96be-0be630ab3cba",
+                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RotateToRight",
+                    "action": "Rotation",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 }
             ]
         }

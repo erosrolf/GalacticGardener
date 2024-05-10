@@ -1,0 +1,15 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class JetpackInputReader : MonoBehaviour
+{
+    [SerializeField] private JetpackController _jetpackController;
+
+    public void Rotation(InputAction.CallbackContext context)
+    {
+        var direction = context.ReadValue<float>();
+        _jetpackController.SetRotateDirection(direction);
+    }
+}
