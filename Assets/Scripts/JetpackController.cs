@@ -25,16 +25,19 @@ public class JetpackController : MonoBehaviour
             _lastDirection = _rotateDirection;
         }
         transform.Rotate(new Vector3(0, 0, 1) * _lastDirection * Time.deltaTime * 50);
-        var navigatorPosition = transform.position + findPointToMove();
-        if (!IsRedPoint(navigatorPosition))
+        if (!_isMoving)
         {
-            _navigatorImage.color = Color.red;
+            var navigatorPosition = transform.position + findPointToMove();
+            if (!IsRedPoint(navigatorPosition))
+            {
+                _navigatorImage.color = Color.red;
+            }
+            else
+            {
+                _navigatorImage.color = Color.white;
+            }
+            _navigator.transform.position = navigatorPosition;
         }
-        else
-        {
-            _navigatorImage.color = Color.white;
-        }
-        _navigator.transform.position = navigatorPosition;
     }
 
     public void RotateLeft(InputAction.CallbackContext context)
