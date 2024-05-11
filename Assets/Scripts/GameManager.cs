@@ -57,6 +57,8 @@ namespace Architecture
 
         void Start()
         {
+            PlayerPrefs.SetInt("Score", 0);
+            PlayerPrefs.Save();
             CurrentState = GameState.Menu;
         }
 
