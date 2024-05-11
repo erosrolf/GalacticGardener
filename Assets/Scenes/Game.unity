@@ -5973,6 +5973,8 @@ MonoBehaviour:
   - {fileID: 5086509610984096057, guid: 6bb138e2b2265a245ac265646b165f97, type: 3}
   _z_distanceToPlayer: 20
   pointPrefab: {fileID: 7793078429768925396, guid: 9a4145bcfc0d63f4e8745c5ffe7daa2b, type: 3}
+  minSpeed: 3
+  maxSpeed: 10
 --- !u!1 &2105050232
 GameObject:
   m_ObjectHideFlags: 0

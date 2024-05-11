@@ -8,6 +8,9 @@ public class Spawner : MonoBehaviour
     public GameObject[] prefabs;
     public float _z_distanceToPlayer;
     public GameObject pointPrefab;
+    public float minSpeed;
+    public float maxSpeed;
+
 
     private Vector3[] _innerSpawnZone;
     private Vector3[] _middleSpawnZone;
@@ -78,7 +81,8 @@ public class Spawner : MonoBehaviour
             Vector3 spawnPosition = _innerSpawnZone[indexes[i]];
             spawnPosition.z = _z_distanceToPlayer;
             GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
-            newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * 5, ForceMode.Impulse);
+            float forceFactor = Random.Range(minSpeed, maxSpeed);
+            newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * forceFactor, ForceMode.Impulse);
             yield return new WaitForSeconds(timeToRepeat / count);
         }
     }
@@ -93,7 +97,8 @@ public class Spawner : MonoBehaviour
             Vector3 spawnPosition = _middleSpawnZone[indexes[i]];
             spawnPosition.z = _z_distanceToPlayer;
             GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
-            newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * 5, ForceMode.Impulse);
+            float forceFactor = Random.Range(minSpeed, maxSpeed);
+            newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * forceFactor, ForceMode.Impulse);
             yield return new WaitForSeconds(timeToRepeat / count);
         }
     }
@@ -108,7 +113,8 @@ public class Spawner : MonoBehaviour
             Vector3 spawnPosition = _outerSpawnZone[indexes[i]];
             spawnPosition.z = _z_distanceToPlayer;
             GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
-            newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * 5, ForceMode.Impulse);
+            float forceFactor = Random.Range(minSpeed, maxSpeed);
+            newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * forceFactor, ForceMode.Impulse);
             yield return new WaitForSeconds(timeToRepeat / count);
         }
     }
