@@ -1,3 +1,4 @@
+using Architecture;
 using Cinemachine;
 using UnityEngine;
 
@@ -18,12 +19,14 @@ public class CollideInspector : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             Debug.Log("Enemy collision");
+            AudioManager.Instance.PlaySFX("Enemy", GetComponent<AudioSource>());
             CollideWithEnemy?.Invoke();
             CollisionWithEnemy();
         }
         else if (other.gameObject.CompareTag("Tree"))
         {
             Debug.Log("Tree collision");
+            AudioManager.Instance.PlaySFX("Tree", GetComponent<AudioSource>());
             other.gameObject.GetComponent<ObjectDisappearance>().StartDisappearance();
             CollideWithTree?.Invoke();
         }

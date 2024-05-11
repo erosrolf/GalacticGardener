@@ -71,6 +71,7 @@ namespace Architecture
             if (CurrentState == GameState.Playing)
             {
                 Debug.Log("GAME OVER");
+                AudioManager.Instance.PlaySFX("GameOver");
                 CurrentState = GameState.GameOver;
                 _playerInterface.SetActive(false);
                 _gameOverInterface.SetActive(true);
