@@ -1,6 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -13,6 +13,15 @@ public class Spawner : MonoBehaviour
     private Vector3[] _middleSpawnZone;
     private Vector3[] _outerSpawnZone;
 
+    public void VisualizePoints(Vector3[] points)
+    {
+        foreach (Vector3 point in points)
+        {
+            Instantiate(pointPrefab, new Vector3(point.x, point.y, _z_distanceToPlayer), Quaternion.identity);
+        }
+    }
+
+
     private void Awake()
     {
         _innerSpawnZone = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects);
@@ -22,27 +31,44 @@ public class Spawner : MonoBehaviour
         tmp = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects * 4);
         _outerSpawnZone = InsertMiddlePoints(tmp);
     }
-
     void Start()
     {
-        InvokeRepeating("SpawnOnInnerZone", 2f, 4f);
-        InvokeRepeating("SpawnOnMiddleZone", 4f, 4f);
-        InvokeRepeating("SpawnOnOuterZone", 2f, 2f);
-
-        VisualizePoints(_innerSpawnZone);
-        VisualizePoints(_middleSpawnZone);
-        VisualizePoints(_outerSpawnZone);
+        StartCoroutine(SpawnOnInnerZoneRepeating(2f, 4f));
+        StartCoroutine(SpawnOnMiddleZoneRepeating(4f, 4f));
+        // StartCoroutine(SpawnOnOuterZoneRepeating(2f, 2f));
     }
 
-    public void VisualizePoints(Vector3[] points)
+    IEnumerator SpawnOnInnerZoneRepeating(float timeToStart, float timeToRepeat)
     {
-        foreach (Vector3 point in points)
+        yield return new WaitForSeconds(timeToStart);
+        while (true)
         {
-            Instantiate(pointPrefab, new Vector3(point.x, point.y, _z_distanceToPlayer), Quaternion.identity);
+            StartCoroutine(SpawnOnInnerZone(timeToRepeat));
+            yield return new WaitForSeconds(timeToRepeat);
         }
     }
 
-    public void SpawnOnInnerZone()
+    IEnumerator SpawnOnMiddleZoneRepeating(float timeToStart, float timeToRepeat)
+    {
+        yield return new WaitForSeconds(timeToStart);
+        while (true)
+        {
+            StartCoroutine(SpawnOnMiddleZone(timeToRepeat));
+            yield return new WaitForSeconds(timeToRepeat);
+        }
+    }
+
+    IEnumerator SpawnOnOuterZoneRepeating(float timeToStart, float timeToRepeat)
+    {
+        yield return new WaitForSeconds(timeToStart);
+        while (true)
+        {
+            StartCoroutine(SpawnOnOuterZone(timeToRepeat));
+            yield return new WaitForSeconds(timeToRepeat);
+        }
+    }
+
+    public IEnumerator SpawnOnInnerZone(float timeToRepeat)
     {
         int count = GameSettings.Instance.SpawnCountOnInnerZone;
         var indexes = GetUniqueRandomNumbers(_innerSpawnZone.Length, count);
@@ -53,10 +79,11 @@ public class Spawner : MonoBehaviour
             spawnPosition.z = _z_distanceToPlayer;
             GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
             newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * 5, ForceMode.Impulse);
+            yield return new WaitForSeconds(timeToRepeat / count);
         }
     }
 
-    public void SpawnOnMiddleZone()
+    public IEnumerator SpawnOnMiddleZone(float timeToRepeat)
     {
         int count = GameSettings.Instance.SpawnCountOnMiddleZone;
         var indexes = GetUniqueRandomNumbers(_middleSpawnZone.Length, count);
@@ -67,10 +94,11 @@ public class Spawner : MonoBehaviour
             spawnPosition.z = _z_distanceToPlayer;
             GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
             newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * 5, ForceMode.Impulse);
+            yield return new WaitForSeconds(timeToRepeat / count);
         }
     }
 
-    public void SpawnOnOuterZone()
+    public IEnumerator SpawnOnOuterZone(float timeToRepeat)
     {
         int count = GameSettings.Instance.SpawnCountOnOuterZone;
         var indexes = GetUniqueRandomNumbers(_outerSpawnZone.Length, count);
@@ -81,6 +109,7 @@ public class Spawner : MonoBehaviour
             spawnPosition.z = _z_distanceToPlayer;
             GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
             newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * 5, ForceMode.Impulse);
+            yield return new WaitForSeconds(timeToRepeat / count);
         }
     }
 
