@@ -24,6 +24,7 @@ public class CollideInspector : MonoBehaviour
         else if (other.gameObject.CompareTag("Tree"))
         {
             Debug.Log("Tree collision");
+            other.gameObject.GetComponent<ObjectDisappearance>().StartDisappearance();
             CollideWithTree?.Invoke();
         }
     }

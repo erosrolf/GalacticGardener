@@ -16,13 +16,13 @@ namespace Architecture
         [SerializeField] private GameObject _playerInterface;
         [SerializeField] private GameObject _gameOverInterface;
 
+        public GameObject player;
         public GameState CurrentState { get; private set; }
         public static GameManager Instance { get; private set; }
 
         public delegate void GameStateDelegate();
         public static event GameStateDelegate StartGameEvent;
         public static event GameStateDelegate EndGameEvent;
-
 
         void OnEnable()
         {
@@ -46,10 +46,16 @@ namespace Architecture
                 Destroy(gameObject);
             }
         }
+
         void Start()
         {
             CurrentState = GameState.Menu;
             AudioManager.Instance.PlayMusic("MenuMusic");
+        }
+
+        public Vector3 GetPlayerPosition()
+        {
+            return player.transform.position;
         }
 
         public void GameStart()
