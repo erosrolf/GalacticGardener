@@ -11,10 +11,32 @@ public class Spawner : MonoBehaviour
     public float minSpeed;
     public float maxSpeed;
 
-
     private Vector3[] _innerSpawnZone;
     private Vector3[] _middleSpawnZone;
-    private Vector3[] _outerSpawnZone;
+
+    void OnEnable()
+    {
+        JetpackController.NewZonePositionEvent += ZonesOnPlayerPosition;
+    }
+
+    void OnDisable()
+    {
+        JetpackController.NewZonePositionEvent -= ZonesOnPlayerPosition;
+    }
+
+    public void ZonesOnPlayerPosition(Vector3 target)
+    {
+        for (int i = 0; i < _innerSpawnZone.Length; ++i)
+        {
+            _innerSpawnZone[i].x += target.x;
+            _innerSpawnZone[i].y += target.y;
+        }
+        for (int i = 0; i < _middleSpawnZone.Length; ++i)
+        {
+            _middleSpawnZone[i].x += target.x;
+            _middleSpawnZone[i].y += target.y;
+        }
+    }
 
     public void VisualizePoints(Vector3[] points)
     {
@@ -24,22 +46,20 @@ public class Spawner : MonoBehaviour
         }
     }
 
-
     private void Awake()
     {
         _innerSpawnZone = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects);
         _innerSpawnZone.Append(Vector3.zero);
         var tmp = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects * 2);
         _middleSpawnZone = InsertMiddlePoints(tmp);
-        tmp = HexagonPoints.CalculatePoints(GameSettings.Instance.DistanceBetweenObjects * 4);
-        _outerSpawnZone = InsertMiddlePoints(tmp);
     }
+
     void Start()
     {
         StartCoroutine(SpawnOnInnerZoneRepeating(2f, 4f));
         StartCoroutine(SpawnOnMiddleZoneRepeating(4f, 4f));
-        // StartCoroutine(SpawnOnOuterZoneRepeating(2f, 2f));
     }
+
 
     IEnumerator SpawnOnInnerZoneRepeating(float timeToStart, float timeToRepeat)
     {
@@ -57,16 +77,6 @@ public class Spawner : MonoBehaviour
         while (true)
         {
             StartCoroutine(SpawnOnMiddleZone(timeToRepeat));
-            yield return new WaitForSeconds(timeToRepeat);
-        }
-    }
-
-    IEnumerator SpawnOnOuterZoneRepeating(float timeToStart, float timeToRepeat)
-    {
-        yield return new WaitForSeconds(timeToStart);
-        while (true)
-        {
-            StartCoroutine(SpawnOnOuterZone(timeToRepeat));
             yield return new WaitForSeconds(timeToRepeat);
         }
     }
@@ -95,22 +105,6 @@ public class Spawner : MonoBehaviour
         {
             GameObject prefab = prefabs[Random.Range(0, prefabs.Length)];
             Vector3 spawnPosition = _middleSpawnZone[indexes[i]];
-            spawnPosition.z = _z_distanceToPlayer;
-            GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
-            float forceFactor = Random.Range(minSpeed, maxSpeed);
-            newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * forceFactor, ForceMode.Impulse);
-            yield return new WaitForSeconds(timeToRepeat / count);
-        }
-    }
-
-    public IEnumerator SpawnOnOuterZone(float timeToRepeat)
-    {
-        int count = GameSettings.Instance.SpawnCountOnOuterZone;
-        var indexes = GetUniqueRandomNumbers(_outerSpawnZone.Length, count);
-        for (int i = 0; i < count; i++)
-        {
-            GameObject prefab = prefabs[1];
-            Vector3 spawnPosition = _outerSpawnZone[indexes[i]];
             spawnPosition.z = _z_distanceToPlayer;
             GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
             float forceFactor = Random.Range(minSpeed, maxSpeed);

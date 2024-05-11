@@ -14,6 +14,11 @@ public class JetpackController : MonoBehaviour
 
     [SerializeField] GameObject _navigator;
 
+    public delegate void newPositionDelegate(Vector3 target);
+    public static event newPositionDelegate NewPositionEvent;
+    public delegate void newZonePositionDelegate(Vector3 target);
+    public static event newPositionDelegate NewZonePositionEvent;
+
     public void SetRotateDirection(float direction) => _rotateDirection = direction;
     void Update()
     {
@@ -63,24 +68,11 @@ public class JetpackController : MonoBehaviour
         return hexagon[index] + transform.position;
     }
 
-    public IEnumerator MoveToPointAndBack(Vector3 target)
-    {
-        Vector3 startPosition = transform.position;
-        _isMoving = true;
-        Debug.Log($"tuda {startPosition + findPointToMove()}");
-        yield return StartCoroutine(MoveToPoint(target));
-        Debug.Log($"rest = {timeToRest}");
-        yield return new WaitForSeconds(timeToRest);
-        Debug.Log($"obratno = {startPosition}");
-        yield return StartCoroutine(MoveToPoint(startPosition));
-        _isMoving = false;
-    }
-
-
     public IEnumerator MoveToPoint(Vector3 target)
     {
         _isMoving = true;
         Vector3 startPosition = transform.position;
+        NewZonePositionEvent?.Invoke(target - startPosition);
         float timeElapsed = 0;
 
         while (timeElapsed < timeToPoint)
@@ -93,5 +85,6 @@ public class JetpackController : MonoBehaviour
         }
         transform.position = target;
         _isMoving = false;
+        NewPositionEvent?.Invoke(target);
     }
 }
