@@ -2139,6 +2139,7 @@ MonoBehaviour:
   _menuInterface: {fileID: 979114663}
   _playerInterface: {fileID: 419575823}
   _gameOverInterface: {fileID: 10254837}
+  player: {fileID: 1432807215}
 --- !u!4 &704711102
 Transform:
   m_ObjectHideFlags: 0
