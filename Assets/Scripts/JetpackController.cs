@@ -1,4 +1,5 @@
 using System.Collections;
+using Architecture;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,19 +15,45 @@ public class JetpackController : MonoBehaviour
 
     [SerializeField] GameObject _navigator;
 
+    [SerializeField] ParticleSystem _particleMiddle;
+    [SerializeField] ParticleSystem _particleLeft;
+    [SerializeField] ParticleSystem _particleRight;
+
     public delegate void newPositionDelegate(Vector3 target);
     public static event newPositionDelegate NewPositionEvent;
     public delegate void newZonePositionDelegate(Vector3 target);
     public static event newPositionDelegate NewZonePositionEvent;
+
+    private bool isPlaying = false;
 
     public void SetRotateDirection(float direction) => _rotateDirection = direction;
     void Update()
     {
         if (_rotateDirection != 0)
         {
+            var audioSource = GetComponent<AudioSource>();
+            if (isPlaying == false)
+            {
+                AudioManager.Instance.PlaySFX("JetPack", audioSource);
+                if (_rotateDirection > 0)
+                {
+                    _particleRight.Play();
+                }
+                else
+                {
+                    _particleLeft.Play();
+                }
+                isPlaying = true;
+            }
+
             transform.Rotate(new Vector3(0, 0, 1) * _rotateDirection * Time.deltaTime * rotationSpeed);
             _lastDirection = _rotateDirection;
         }
+        else
+        {
+            isPlaying = false;
+        }
+
         transform.Rotate(new Vector3(0, 0, 1) * _lastDirection * Time.deltaTime * 50);
         if (!_isMoving)
         {
@@ -38,7 +65,6 @@ public class JetpackController : MonoBehaviour
     {
         if (context.started || context.performed)
         {
-            Debug.Log("rotateLeft");
             transform.Rotate(Vector3.up * -rotationSpeed * Time.deltaTime);
         }
     }
@@ -47,7 +73,6 @@ public class JetpackController : MonoBehaviour
     {
         if (context.started || context.performed)
         {
-            Debug.Log("rotateRight");
             transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime);
         }
     }
@@ -56,6 +81,8 @@ public class JetpackController : MonoBehaviour
     {
         if (!_isMoving)
         {
+            AudioManager.Instance.PlaySFX("JetPack", GetComponent<AudioSource>());
+            _particleMiddle.Play();
             StartCoroutine(MoveToPoint(findPointToMove()));
         }
     }

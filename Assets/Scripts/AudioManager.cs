@@ -36,16 +36,18 @@ namespace Architecture
             }
         }
 
-        public void PlaySFX(string name)
+        public void PlaySFX(string name, AudioSource source = null)
         {
-            Sound sfx = Array.Find(musicSounds, x => x.name == name);
+            Sound sfx = Array.Find(sfxSounds, s => s.name == name);
             if (sfx == null)
             {
                 Debug.Log($"Sound {name} not found!");
             }
             else
             {
-                sfxSource.PlayOneShot(sfx.clip);
+                AudioSource audioSource = source ?? sfxSource;
+                audioSource.clip = sfx.clip;
+                audioSource.Play();
             }
         }
 
