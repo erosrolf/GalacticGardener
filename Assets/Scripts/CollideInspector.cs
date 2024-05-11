@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 
@@ -10,17 +8,28 @@ public class CollideInspector : MonoBehaviour
     [SerializeField] private JetpackController _jetpackController;
     [SerializeField] private Rigidbody _jetpackRigidbody;
 
+    public delegate void CollisionEventDelegate();
+    public static event CollisionEventDelegate CollideWithEnemy;
+    public static event CollisionEventDelegate CollideWithTree;
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
+            Debug.Log("Enemy collision");
+            CollideWithEnemy?.Invoke();
             CollisionWithEnemy();
+        }
+        else if (other.gameObject.CompareTag("Tree"))
+        {
+            Debug.Log("Tree collision");
+            CollideWithTree?.Invoke();
         }
     }
 
     private void CollisionWithEnemy()
     {
-        Debug.Log("Collision detected with enemy");
         _jetpackController.enabled = false;
 
         _jetpackRigidbody.constraints = RigidbodyConstraints.None;

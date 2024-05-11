@@ -15,20 +15,20 @@ public class Bootstrap : MonoBehaviour
 
         Screen.SetResolution(width, height, fullScreen);
 
-        StartCoroutine(LoadSceneWithDelay(1f));
+        // StartCoroutine(LoadSceneWithDelay(1f));
     }
 
-    IEnumerator LoadSceneWithDelay(float delay)
-    {
-        float elapsedTime = 0;
+    // IEnumerator LoadSceneWithDelay(float delay)
+    // {
+    //     float elapsedTime = 0;
 
-        while (elapsedTime < delay)
-        {
-            elapsedTime += Time.deltaTime;
-            _loadbar.size = Mathf.Clamp01(elapsedTime / delay);
-            yield return null;
-        }
+    //     while (elapsedTime < delay)
+    //     {
+    //         elapsedTime += Time.deltaTime;
+    //         _loadbar.size = Mathf.Clamp01(elapsedTime / delay);
+    //         yield return null;
+    //     }
 
-        GameManager.Instance.LoadMenu();
-    }
+    //     GameManager.Instance.LoadMenu();
+    // }
 }

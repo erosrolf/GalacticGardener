@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Architecture;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -16,11 +17,13 @@ public class Spawner : MonoBehaviour
 
     void OnEnable()
     {
+        GameManager.StartGameEvent += StartSpawn;
         JetpackController.NewZonePositionEvent += ZonesOnPlayerPosition;
     }
 
     void OnDisable()
     {
+        GameManager.StartGameEvent -= StartSpawn;
         JetpackController.NewZonePositionEvent -= ZonesOnPlayerPosition;
     }
 
@@ -54,17 +57,16 @@ public class Spawner : MonoBehaviour
         _middleSpawnZone = InsertMiddlePoints(tmp);
     }
 
-    void Start()
+    public void StartSpawn()
     {
         StartCoroutine(SpawnOnInnerZoneRepeating(2f, 4f));
         StartCoroutine(SpawnOnMiddleZoneRepeating(4f, 4f));
     }
 
-
     IEnumerator SpawnOnInnerZoneRepeating(float timeToStart, float timeToRepeat)
     {
         yield return new WaitForSeconds(timeToStart);
-        while (true)
+        while (GameManager.Instance.CurrentState == GameManager.GameState.Playing)
         {
             StartCoroutine(SpawnOnInnerZone(timeToRepeat));
             yield return new WaitForSeconds(timeToRepeat);
@@ -74,7 +76,7 @@ public class Spawner : MonoBehaviour
     IEnumerator SpawnOnMiddleZoneRepeating(float timeToStart, float timeToRepeat)
     {
         yield return new WaitForSeconds(timeToStart);
-        while (true)
+        while (GameManager.Instance.CurrentState == GameManager.GameState.Playing)
         {
             StartCoroutine(SpawnOnMiddleZone(timeToRepeat));
             yield return new WaitForSeconds(timeToRepeat);

@@ -1,3 +1,5 @@
+using System;
+using UnityEditor.Build.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,71 +12,71 @@ namespace Architecture
             Menu = 1,
             Playing = 2,
             GameOver = 3,
-            Paused = 4,
         }
 
-        [SerializeField] private Canvas _menu;
+        [SerializeField] private GameObject _menuInterface;
+        [SerializeField] private GameObject _playerInterface;
+        [SerializeField] private GameObject _gameOverInterface;
+
         public GameState CurrentState { get; private set; }
         public static GameManager Instance { get; private set; }
+
+        public delegate void GameStateDelegate();
+        public static event GameStateDelegate StartGameEvent;
+        public static event GameStateDelegate EndGameEvent;
+
+
+        void OnEnable()
+        {
+            CollideInspector.CollideWithEnemy += EndGame;
+        }
+
+        void OnDisable()
+        {
+            CollideInspector.CollideWithEnemy -= EndGame;
+        }
 
         void Awake()
         {
             if (Instance == null)
             {
                 Instance = this;
-                DontDestroyOnLoad(gameObject);
+                // DontDestroyOnLoad(gameObject);
             }
             else
             {
                 Destroy(gameObject);
             }
         }
-
-        public void LoadMenu()
+        void Start()
         {
-            SceneManager.LoadScene((int)GameState.Menu);
             CurrentState = GameState.Menu;
-            // AudioManager.Instance.PlayMusic("MenuMusic");
+            AudioManager.Instance.PlayMusic("MenuMusic");
         }
 
         public void GameStart()
         {
-            _menu.enabled = false;
+            StartGameEvent?.Invoke();
+            _menuInterface.SetActive(false);
             CurrentState = GameState.Playing;
             AudioManager.Instance.PlayMusic("GameMusic");
-        }
-
-        public void PauseGame()
-        {
-            if (CurrentState == GameState.Playing)
-            {
-                // Здесь может быть код, который ставит игру на паузу
-                // Например, остановка времени в игре
-                _menu.enabled = true;
-                CurrentState = GameState.Paused;
-            }
-        }
-
-        public void ResumeGame()
-        {
-            if (CurrentState == GameState.Paused)
-            {
-                // Здесь может быть код, который возобновляет игру
-                // Например, возобновление времени в игре
-                CurrentState = GameState.Playing;
-            }
         }
 
         public void EndGame()
         {
             if (CurrentState == GameState.Playing)
             {
-                // Здесь может быть код, который обрабатывает окончание игры
-                // Например, показ экрана Game Over, сохранение счета и т.д.
-                SceneManager.LoadScene((int)GameState.GameOver);
+                Debug.Log("GAME OVER");
                 CurrentState = GameState.GameOver;
+                _playerInterface.SetActive(false);
+                _gameOverInterface.SetActive(true);
                 AudioManager.Instance.PlayMusic("EndGameMusic");
             }
+        }
+
+        public void ReloadGame()
+        {
+            SceneManager.LoadScene("Game");
         }
     }
 }
