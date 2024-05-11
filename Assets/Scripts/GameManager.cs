@@ -57,6 +57,7 @@ namespace Architecture
 
         void Start()
         {
+            AudioManager.Instance.PlayMusic("GameMusic");
             PlayerPrefs.SetInt("Score", 0);
             PlayerPrefs.Save();
             CurrentState = GameState.Menu;
