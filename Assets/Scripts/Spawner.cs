@@ -7,10 +7,13 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public GameObject[] prefabs;
+    public GameObject planetPrefab;
     public float _z_distanceToPlayer;
     public GameObject pointPrefab;
     public float minSpeed;
     public float maxSpeed;
+
+    public GameObject SpawnParent;
 
     private Vector3[] _innerSpawnZone;
     private Vector3[] _middleSpawnZone;
@@ -18,13 +21,23 @@ public class Spawner : MonoBehaviour
     void OnEnable()
     {
         GameManager.StartGameEvent += StartSpawn;
+        GameManager.PlanetEvent += SpawnPlanet;
         JetpackController.NewZonePositionEvent += ZonesOnPlayerPosition;
     }
 
     void OnDisable()
     {
         GameManager.StartGameEvent -= StartSpawn;
+        GameManager.PlanetEvent -= SpawnPlanet;
         JetpackController.NewZonePositionEvent -= ZonesOnPlayerPosition;
+    }
+
+    public void SpawnPlanet()
+    {
+        var position = transform.position;
+        position.z = _z_distanceToPlayer;
+        GameObject newObj = Instantiate(planetPrefab, position, Quaternion.identity);
+        newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * 3, ForceMode.Impulse);
     }
 
     public void ZonesOnPlayerPosition(Vector3 target)
@@ -59,6 +72,7 @@ public class Spawner : MonoBehaviour
 
     public void StartSpawn()
     {
+        Debug.Log("START SPAWN");
         StartCoroutine(SpawnOnInnerZoneRepeating(2f, 4f));
         StartCoroutine(SpawnOnMiddleZoneRepeating(4f, 4f));
     }
@@ -93,6 +107,7 @@ public class Spawner : MonoBehaviour
             Vector3 spawnPosition = _innerSpawnZone[indexes[i]];
             spawnPosition.z = _z_distanceToPlayer;
             GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
+            newObj.transform.parent = SpawnParent.transform;
             float forceFactor = Random.Range(minSpeed, maxSpeed);
             newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * forceFactor, ForceMode.Impulse);
             yield return new WaitForSeconds(timeToRepeat / count);
@@ -109,6 +124,7 @@ public class Spawner : MonoBehaviour
             Vector3 spawnPosition = _middleSpawnZone[indexes[i]];
             spawnPosition.z = _z_distanceToPlayer;
             GameObject newObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
+            newObj.transform.parent = SpawnParent.transform;
             float forceFactor = Random.Range(minSpeed, maxSpeed);
             newObj.GetComponent<Rigidbody>().AddForce(Vector3.back * forceFactor, ForceMode.Impulse);
             yield return new WaitForSeconds(timeToRepeat / count);

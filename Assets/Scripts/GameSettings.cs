@@ -9,6 +9,7 @@ public class GameSettings : MonoBehaviour
     public int SpawnCountOnInnerZone;
     public int SpawnCountOnMiddleZone;
     public int SpawnCountOnOuterZone;
+    public int timeToPlanet;
 
     void Awake()
     {

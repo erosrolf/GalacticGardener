@@ -79,7 +79,7 @@ public class JetpackController : MonoBehaviour
 
     public void MoveIntoSpace()
     {
-        if (!_isMoving)
+        if (!_isMoving && GameManager.Instance.CurrentState == GameManager.GameState.Playing)
         {
             AudioManager.Instance.PlaySFX("JetPack", GetComponent<AudioSource>());
             _particleMiddle.Play();

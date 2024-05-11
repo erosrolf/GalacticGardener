@@ -8,6 +8,8 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _scoreText;
     private int _scoreCount = 0;
 
+    public int GetScore() => _scoreCount;
+
     void OnEnable()
     {
         CollideInspector.CollideWithTree += AddScore;
